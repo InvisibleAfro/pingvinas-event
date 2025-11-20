@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="src/Pingvinas.Event.Api/Pingvinas.Event.Api.csproj" />
+  <Project Path="src/Pingvinas.Event.Core/Pingvinas.Event.Core.csproj" />
+  <Project Path="src/Pingvinas.Event.Domain/Pingvinas.Event.Domain.csproj" />
+  <Project Path="TestProject/TestProject.csproj" />
+</Solution>
