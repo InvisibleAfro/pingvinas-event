@@ -8,10 +8,10 @@ public class AnagramController : ControllerBase
 {
     [HttpGet($"{nameof(AreAnagrams)}")]
     [ProducesResponseType(typeof(bool), 200)]
-    public ActionResult<bool> AreAnagrams(string word, string potentialAnagram)
+    public bool AreAnagrams(string word, string potentialAnagram)
     {
         // TODO: Eirik says this is not correct, whattodo?
         bool result = word == potentialAnagram;
-        return Ok(result);
+        return result;
     }
 }
