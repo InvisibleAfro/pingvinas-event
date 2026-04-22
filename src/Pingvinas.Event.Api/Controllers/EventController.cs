@@ -34,8 +34,8 @@ public class EventController : ControllerBase
     }
 
     [HttpPut]
-    public ActionResult<bool> UpdateEvent([FromBody] EventDto eventDto)
-        => NoContent();
+    public async Task<ActionResult<bool>> UpdateEvent([FromBody] EventDto eventDto)
+        => Ok(await _service.UpdateEvent(eventDto, true));
 
     /// <summary>
     /// Cancels the specified event.

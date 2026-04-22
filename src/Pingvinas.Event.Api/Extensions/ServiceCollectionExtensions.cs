@@ -1,5 +1,6 @@
 ﻿using Pingvinas.Event.Core.Common;
 using Pingvinas.Event.Core.Features;
+using Pingvinas.Event.Core.Features.Notification;
 using Pingvinas.Event.Core.Features.PingvinEvent;
 using Pingvinas.Event.Domain.Repositories;
 
@@ -11,5 +12,7 @@ public static class ServiceCollectionExtensions
         => services.AddTransient<IEventService, EventService>()
             .AddTransient<IEventRepository, EventRepository>()
             .AddTransient<CurrentUser>()
-            .AddTransient<INotificationService, EmailService>();
+            .AddTransient<INotificationService, CompositeNotificationService>()
+            .AddTransient<INotificationChannel, EmailNotificationChannel>()
+            .AddTransient<INotificationChannel, SmsNotificationChannel>();
 }
