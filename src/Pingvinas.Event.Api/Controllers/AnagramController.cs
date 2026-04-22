@@ -10,8 +10,11 @@ public class AnagramController : ControllerBase
     [ProducesResponseType(typeof(bool), 200)]
     public bool AreAnagrams(string word, string potentialAnagram)
     {
-        // TODO: Eirik says this is not correct, whattodo?
-        bool result = word == potentialAnagram;
-        return result;
+        if (word == null || potentialAnagram == null || word.Length != potentialAnagram.Length)
+        {
+            return false;
+        }
+
+        return word.Order().SequenceEqual(potentialAnagram.Order());
     }
 }
