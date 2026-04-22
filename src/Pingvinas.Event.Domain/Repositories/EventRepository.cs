@@ -35,6 +35,11 @@ public class EventRepository : IEventRepository
         return @event;
     }
 
+    public async Task CancelEvent(string eventId)
+    {
+        await Task.Delay(100);
+    }
+
     public async Task<PingvinEvent> GetEvent(string eventId)
     {
         await Task.Delay(100);
@@ -83,6 +88,12 @@ public class EventRepository : IEventRepository
         };
     }
 
+    public async Task<List<Participant>> GetEventParticipants(string eventId)
+    {
+        await Task.Delay(100);
+        return CreateParticipantList(eventId, 10).ToList();
+    }
+
     private IEnumerable<Participant> CreateParticipantList(string eventId, int participantCount)
     {
         for (var i = 0; i < participantCount; i++)
@@ -98,6 +109,6 @@ public class EventRepository : IEventRepository
         {
             events.Add(CreatePingvinEvent());
         }
-        return Task.Run(() => events.AsEnumerable());
+        return Task.FromResult(events.AsEnumerable());
     }
 }

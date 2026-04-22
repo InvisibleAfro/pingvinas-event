@@ -7,7 +7,7 @@ namespace Pingvinas.Event.Api.Controllers;
 [ApiController]
 [Route("/api/[controller]")]
 public class EventController : ControllerBase
-{ 
+{
     private readonly IEventService _service;
     private readonly ILogger<EventController> _logger;
 
@@ -27,11 +27,14 @@ public class EventController : ControllerBase
         => Ok(await _service.GetEvent(id));
 
     [HttpPost]
-    public ActionResult<string> CreateEvent([FromBody] EventDto @event)
-        => Created(string.Empty, new { });
+    public async Task<ActionResult<string>> CreateEvent([FromBody] EventDto eventDto)
+    {
+        var e = await _service.CreateEvent(eventDto);
+        return Created(string.Empty, new { });
+    }
 
     [HttpPut]
-    public ActionResult<bool> UpdateEvent([FromBody] EventDto @event)
+    public ActionResult<bool> UpdateEvent([FromBody] EventDto eventDto)
         => NoContent();
 
     /// <summary>
@@ -40,6 +43,6 @@ public class EventController : ControllerBase
     /// <param name="eventId"></param>
     /// <returns></returns>
     [HttpDelete("{eventId}")]
-    public async Task<ActionResult<bool>> CancelEvent(string eventId) 
+    public async Task<ActionResult<bool>> CancelEvent(string eventId)
         => Ok(await _service.CancelEvent(eventId));
 }

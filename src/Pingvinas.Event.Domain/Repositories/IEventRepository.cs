@@ -10,4 +10,6 @@ public interface IEventRepository
     Task<PingvinEvent> UpdateEvent(PingvinEvent @event);
     Task<PingvinEvent> GetEvent(string eventId);
     Task<IEnumerable<PingvinEvent>> GetEvents();
+    Task<List<Participant>> GetEventParticipants(string eventId);
+    Task CancelEvent(string eventId);
 }
