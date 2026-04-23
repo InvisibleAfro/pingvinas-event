@@ -22,7 +22,7 @@ namespace Pingvinas.Event.Core.Features
         public bool ShouldNotify(Participant participant)
         {
             // Check if participant has a valid email address && is not opted out of email notifications
-            return participant.User.Email != null && participant.User.Email.Contains("@");
+            return participant.User?.Email != null && participant.User.Email.Contains("@");
         }
     }
 }
