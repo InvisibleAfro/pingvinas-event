@@ -41,7 +41,7 @@ public interface IEventService
     /// </summary>
     /// <param name="eventId">The id of the requested event.</param>
     /// <returns></returns>
-    Task<EventDto> GetEvent(string eventId);
+    Task<EventDto?> GetEvent(string eventId);
 
     /// <summary>
     /// Gets all events in the database.

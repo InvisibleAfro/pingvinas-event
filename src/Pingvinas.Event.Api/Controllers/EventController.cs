@@ -31,8 +31,8 @@ public class EventController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<EventDto>> GetById(string id)
     {
-        if (string.IsNullOrWhiteSpace(id) || !Guid.TryParse(id, out _))
-            return BadRequest("Event ID is required.");
+        if (!IsValidId(id))
+            return BadRequest("A valid event ID is required.");
 
         var e = await _service.GetEvent(id);
 
@@ -48,24 +48,39 @@ public class EventController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<EventDto>> CreateEvent([FromBody] EventDto eventDto)
     {
-        //if invalid return BadRequest with validation errors
-
-        var e = await _service.CreateEvent(eventDto);
-        if (e == null)
-            return Problem("Failed to create event.");
-
-        return CreatedAtAction(nameof(GetById), new { id = e.Id }, e);
+        var createdEvent = await _service.CreateEvent(eventDto);
+        return CreatedAtAction(nameof(GetById), new { id = createdEvent.Id }, createdEvent);
     }
 
     [HttpPut]
+    [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<bool>> UpdateEvent([FromBody] EventDto eventDto)
     {
+        if (!IsValidId(eventDto.Id))
+            return BadRequest("A valid event ID is required.");
+
+        if (await _service.GetEvent(eventDto.Id) is null)
+            return NotFound();
+
         return Ok(await _service.UpdateEvent(eventDto, true));
     }
 
     [HttpDelete("{eventId}")]
+    [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<bool>> CancelEvent(string eventId)
     {
+        if (!IsValidId(eventId))
+            return BadRequest("A valid event ID is required.");
+
+        if (await _service.GetEvent(eventId) is null)
+            return NotFound();
+
         return Ok(await _service.CancelEvent(eventId));
     }
+
+    private static bool IsValidId(string id) => !string.IsNullOrWhiteSpace(id) && Guid.TryParse(id, out _);
 }
