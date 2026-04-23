@@ -1,4 +1,5 @@
 ﻿using Bogus.DataSets;
+using Pingvinas.Event.Domain.Context;
 using Pingvinas.Event.Domain.Models;
 
 namespace Pingvinas.Event.Domain.Repositories;
@@ -6,10 +7,12 @@ namespace Pingvinas.Event.Domain.Repositories;
 public class EventRepository : IEventRepository
 {
     private readonly Random _rng;
+    private readonly EventContext _eventContext;
 
-    public EventRepository()
+    public EventRepository(EventContext eventContext)
     {
         _rng = new Random();
+        _eventContext = eventContext;
     }
 
     public Task AddParticipantAsync(Participant participant)
@@ -104,6 +107,10 @@ public class EventRepository : IEventRepository
 
     public Task<IEnumerable<PingvinEvent>> GetEvents()
     {
+        // async method with
+        // using Microsoft.EntityFrameworkCore;
+        // return await _eventContext.PingvinEvents.Where(e => e.StartDate > DateTime.Now).OrderBy(e => e.StartDate).ToListAsync();
+
         List<PingvinEvent> events = [];
         for (var i = 0; i < 10; i++)
         {

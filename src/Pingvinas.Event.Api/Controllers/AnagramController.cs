@@ -6,15 +6,17 @@ namespace Pingvinas.Event.Api.Controllers;
 [Route("/api/[controller]")]
 public class AnagramController : ControllerBase
 {
-    [HttpGet($"{nameof(AreAnagrams)}")]
+    [HttpGet]
     [ProducesResponseType(typeof(bool), 200)]
-    public bool AreAnagrams(string word, string potentialAnagram)
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public ActionResult<bool> AreAnagrams(string word, string potentialAnagram)
     {
-        if (word == null || potentialAnagram == null || word.Length != potentialAnagram.Length)
-        {
-            return false;
-        }
+        if (word == null || potentialAnagram == null)
+            return BadRequest("Both strings must be non-null");
 
-        return word.Order().SequenceEqual(potentialAnagram.Order());
+        if (word.Length != potentialAnagram.Length)
+            return Ok(false);
+
+        return Ok(word.Order().SequenceEqual(potentialAnagram.Order()));
     }
 }

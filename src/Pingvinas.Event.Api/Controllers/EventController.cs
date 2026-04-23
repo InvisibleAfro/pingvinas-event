@@ -19,30 +19,53 @@ public class EventController : ControllerBase
 
     // TODO: Should be able to filter this on events that are still possible to attend.
     [HttpGet]
+    [ProducesResponseType(typeof(List<EventDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult<List<EventDto>>> Get()
-        => Ok(await _service.GetEvents());
+    {
+        return Ok(await _service.GetEvents());
+    }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<EventDto>> Get(string id)
-        => Ok(await _service.GetEvent(id));
+    [ProducesResponseType(typeof(EventDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<EventDto>> GetById(string id)
+    {
+        if (string.IsNullOrWhiteSpace(id) || !Guid.TryParse(id, out _))
+            return BadRequest("Event ID is required.");
+
+        var e = await _service.GetEvent(id);
+
+        if (e == null)
+            return NotFound();
+
+        return Ok(e);
+    }
 
     [HttpPost]
-    public async Task<ActionResult<string>> CreateEvent([FromBody] EventDto eventDto)
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<EventDto>> CreateEvent([FromBody] EventDto eventDto)
     {
+        //if invalid return BadRequest with validation errors
+
         var e = await _service.CreateEvent(eventDto);
-        return Created(string.Empty, new { });
+        if (e == null)
+            return Problem("Failed to create event.");
+
+        return CreatedAtAction(nameof(GetById), new { id = e.Id }, e);
     }
 
     [HttpPut]
     public async Task<ActionResult<bool>> UpdateEvent([FromBody] EventDto eventDto)
-        => Ok(await _service.UpdateEvent(eventDto, true));
+    {
+        return Ok(await _service.UpdateEvent(eventDto, true));
+    }
 
-    /// <summary>
-    /// Cancels the specified event.
-    /// </summary>
-    /// <param name="eventId"></param>
-    /// <returns></returns>
     [HttpDelete("{eventId}")]
     public async Task<ActionResult<bool>> CancelEvent(string eventId)
-        => Ok(await _service.CancelEvent(eventId));
+    {
+        return Ok(await _service.CancelEvent(eventId));
+    }
 }

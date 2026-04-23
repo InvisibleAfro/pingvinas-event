@@ -5,6 +5,10 @@ namespace Pingvinas.Event.Domain.Context;
 
 public class EventContext : DbContext
 {
+    public DbSet<PingvinEvent> PingvinEvents { get; set; } = null!;
+    public DbSet<Participant> Participants { get; set; } = null!;
+    public DbSet<User> Users { get; set; } = null!;
+
     public EventContext(DbContextOptions<EventContext> options) : base(options)
     {
     }

@@ -30,18 +30,9 @@ public class EventService(IEventRepository repository, ILogger<EventService> log
         }
     }
 
-    public async Task<bool> CreateEvent(EventDto eventDto)
+    public async Task<EventDto> CreateEvent(EventDto eventDto)
     {
-        try
-        {
-            await _repository.CreateEvent(MapFromDto(eventDto));
-            return true;
-        }
-        catch (DbException e)
-        {
-            _logger.LogError(e, "Creating event failed");
-            return false;
-        }
+        return MapFromEntity(await _repository.CreateEvent(MapFromDto(eventDto)));
     }
 
     public async Task<bool> UpdateEvent(EventDto eventDto, bool notifyParticipants)
@@ -71,9 +62,13 @@ public class EventService(IEventRepository repository, ILogger<EventService> log
         return true;
     }
 
-    public async Task<EventDto> GetEvent(string eventId)
+    public async Task<EventDto?> GetEvent(string eventId)
     {
-        return MapFromEntity(await _repository.GetEvent(eventId));
+        var e = await _repository.GetEvent(eventId);
+        if (e == null)
+            return null;
+
+        return MapFromEntity(e);
     }
 
     public async Task<IList<EventDto>> GetEvents()

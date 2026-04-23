@@ -17,7 +17,7 @@ public interface IEventService
     /// </summary>
     /// <param name="event">The details of the event that will be created.</param>
     /// <returns>A success-flag.</returns>
-    Task<bool> CreateEvent(EventDto @event);
+    Task<EventDto> CreateEvent(EventDto eventDto);
 
     /// <summary>
     /// Allows a user to make changes to an event.
@@ -42,7 +42,7 @@ public interface IEventService
     /// <param name="eventId">The id of the requested event.</param>
     /// <returns></returns>
     Task<EventDto> GetEvent(string eventId);
-    
+
     /// <summary>
     /// Gets all events in the database.
     /// </summary>
